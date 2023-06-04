@@ -19,6 +19,7 @@ while True:
             print("GZ: ",data[6])
             print("Heading Angle: ",data[7])
             print("Distance bet object & vehicle: ",data[8])
+            print("Light/Dark: ",data[9])
 
     except:
         arduino.close
