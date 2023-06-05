@@ -3,7 +3,7 @@
 // GPS                : gps(tx)=>ard(rx 4) && gps(rx)=>ard(tx pin3) && vcc 5v & gnd        
 // Ecomapass and MPU  : SDA => ard(A4) && SCL => ard(A5) && vcc 5v & gnd
 // UltraSonic HCSR04  : trigPin=>9  echoPin=>10
-
+//LDR                 : A0=>A0
 
 // GPS                => serial port 
 // Ecompass and MPU   => I2C
@@ -19,7 +19,7 @@
 char delimeter = '|';
 
 //GPS
-static const int RXPin = 4, TXPin = 3;
+static const int RXPin = 15, TXPin = 14;
 static const uint32_t GPSBaud = 9600;
 TinyGPSPlus gps;
 // The serial connection to the GPS device
@@ -30,10 +30,15 @@ HMC5883L_Simple Compass;
 const int MPU_ADDR = 0x68; // MPU-6500 I2C address
 
 //ultrasonic
-const int trigPin = 9;
-const int echoPin = 10;
+const int trigPin = 7;
+const int echoPin = 6;
 long duration;
 int distance;
+
+//LDR
+int threshold = 650;
+int AnalogValue;
+int lightValue;
 
 void setup() {
   Serial.begin(9600);
@@ -94,7 +99,7 @@ void loop() {
   duration = pulseIn(echoPin, HIGH);
   // Calculating the distance
   distance = duration * 0.034 / 2;
-  // Prints the distance on the Serial Monitor
+  lightValue = analogRead(A0);
 
   Serial.print(ax);
   Serial.print(delimeter);
@@ -112,6 +117,14 @@ void loop() {
   Serial.print(delimeter);
   Serial.print(distance);
   Serial.print(delimeter);
+  if (lightValue <= threshold) {
+    Serial.print("Light");
+  } 
+  else{
+    Serial.print("Dark");
+  }
+  Serial.print(delimeter);
+  // Serial.println();
   delay(3000); // wait 1 second before reading again
 }
 
